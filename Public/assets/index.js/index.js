@@ -1,0 +1,102 @@
+const myModal = new bootstrap.Modal("#exampleModal");
+let logged = sessionStorage.getItem("logged");
+const session = localStorage.setItem("session");
+
+checkLogged();
+
+//LOGAR NO SISTEMA
+document.getElementById("login-form").addEventListener("submit", function(e){
+    e.preventDefault();
+
+
+    const email = document.getElementById("email-input").value;
+    const password = document.getElementById("password-input").value;
+    const session = document.getElementById("session-check").checked;
+
+   const account = getAccount(email);
+
+   if(account) {
+       alert("Verifique o usuário ou senha")
+
+   }
+
+   if(account) {
+       if(account.password !== password) {
+        alert("Verifique usuário ou senha")
+       }
+       saveSession(email, checkSession)
+
+       window.location.href = "home.html";
+
+   }
+
+  
+})
+
+//CRIAR CONTA
+    document.getElementById("create-form").addEventListener("submit", function(e){
+        e.preventDefault();
+        alert("Enviou o Form");
+    
+   
+        const email = document.getElementById("email-input").value;
+        const password = document.getElementById("password-input").value;
+        
+        
+ 
+
+        console.log(email, password)
+        if(email.lenght < 5) {
+            alert("Coloque um Email válido");
+            return;
+        }
+        if(password.lenght < 7) {
+            alert("Coloque no mínimo 7 dígitos");
+            return;
+        }
+        saveAccount({
+            login: email,
+            password: password,
+            transactions: []
+        })
+
+            myModal.hide();
+
+            alert("Conta criada com sucesso.");
+    
+        });
+
+function checkLogged() {
+    if(session){
+        sessionStorage.setItem("logged", session);
+        logged = session;
+    }
+
+    if(logged) {
+        saveSession(logged, session);
+
+        window.location.href = "home.html"
+    }
+}
+       
+
+function saveAccount(data){
+    localStorage.setItem(data.login, JSON.stringify(data))
+}
+function saveSession(data, saveSession) {
+    if(saveSession) {
+        localStorage.setItem("session", data)
+    }
+
+    sessionStorage.setItem("logged", data)
+}
+
+function getAccount(key){
+    const account = localStorage.getItem(key)
+
+    if(account) {
+        return JSON.parse(account);
+    }
+
+    return "";
+}
